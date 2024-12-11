@@ -1,0 +1,6 @@
+Terminal 1:
+docker compose up --build
+
+Terminal 2:
+docker compose exec app bash
+npm run start:dev
