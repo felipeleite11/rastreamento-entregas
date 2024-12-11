@@ -7,89 +7,7 @@ export class Map {
   private routes: { [routeId: string]: MapRoute } = {};
 
   constructor(element: HTMLElement, options: google.maps.MapOptions) {
-    this.map = new google.maps.Map(element, {
-      ...options,
-      /*styles: [
-        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-        {
-          featureType: "administrative.locality",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry",
-          stylers: [{ color: "#263c3f" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#6b9a76" }],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [{ color: "#38414e" }],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#212a37" }],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9ca5b3" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [{ color: "#746855" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#1f2835" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#f3d19c" }],
-        },
-        {
-          featureType: "transit",
-          elementType: "geometry",
-          stylers: [{ color: "#2f3948" }],
-        },
-        {
-          featureType: "transit.station",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#17263c" }],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#515c6d" }],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.stroke",
-          stylers: [{ color: "#17263c" }],
-        },
-      ],*/
-    });
+    this.map = new google.maps.Map(element, options);
   }
 
   async addRoute(routeOptions: {
@@ -104,15 +22,15 @@ export class Map {
       throw new MapRouteExistsError();
     }
 
-    const { startMarkerOptions, endMarkerOptions, carMarkerOptions } =
-      routeOptions;
+    const { startMarkerOptions, endMarkerOptions, carMarkerOptions } = routeOptions
 
     const route = new MapRoute({
       startMarkerOptions: { ...startMarkerOptions, map: this.map },
       endMarkerOptions: { ...endMarkerOptions, map: this.map },
       carMarkerOptions: { ...carMarkerOptions, map: this.map },
-    });
-    this.routes[routeOptions.routeId] = route;
+    })
+
+    this.routes[routeOptions.routeId] = route
 
     await route.calculateRoute(routeOptions.directionsResponseData);
 
@@ -178,8 +96,11 @@ export class Map {
     if (!this.hasRoute(id)) {
       return;
     }
+
     const route = this.routes[id];
+
     route.delete();
+    
     delete this.routes[id];
   }
 

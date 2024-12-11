@@ -34,7 +34,6 @@ export function MapNewRoute({ directionsData, ...props }: MapNewRouteProps) {
 				position: start_location
 			}
 		})
-
 	}, [map, directionsData])
 
 	return (

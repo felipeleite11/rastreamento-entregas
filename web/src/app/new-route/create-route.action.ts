@@ -1,5 +1,7 @@
 'use server'
 
+import { revalidateTag } from "next/cache"
+
 export async function createRouteAction(state: any, formData: FormData) {
 	const { sourceId, destinationId } = Object.fromEntries(formData)
 
@@ -34,6 +36,8 @@ export async function createRouteAction(state: any, formData: FormData) {
 	if(!response.ok) {
 		return { error: 'Erro ao criar a rota.' }
 	}
+
+	revalidateTag('routes')
 
 	return { success: true }
 }
