@@ -4,10 +4,11 @@ import { RoutesController } from './routes.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MapsModule } from 'src/maps/maps.module';
 import { RouteDriverService } from './route-driver/route-driver.service';
+import { RouteDriverGateway } from './route-driver/route-driver.gateway';
 
 @Module({
   imports: [MapsModule],
   controllers: [RoutesController],
-  providers: [RoutesService, PrismaService, RouteDriverService],
+  providers: [RoutesService, PrismaService, RouteDriverService, RouteDriverGateway],
 })
 export class RoutesModule {}
