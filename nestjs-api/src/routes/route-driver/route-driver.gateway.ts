@@ -7,7 +7,7 @@ import { RoutesService } from '../routes.service'
 	}
 })
 export class RouteDriverGateway {
-	constructor(private routesService: RoutesService) {}
+	constructor(private routesService: RoutesService) { }
 
 	@SubscribeMessage('client:new-points')
 	async handleMessage(client: any, payload: any) {
@@ -17,23 +17,33 @@ export class RouteDriverGateway {
 
 		const { steps } = (route.directions as any).routes[0].legs[0]
 
-		console.log('nº de steps da rota:', steps.length)
-
-		for(const step of steps) {
+		for (const step of steps) {
 			const { lat: latStart, lng: lngStart } = step.start_location
 			const { lat: latEnd, lng: lngEnd } = step.end_location
 
-			console.log('Emitindo evento:', `server:new-points/${route_id}:list`)
-
 			client.emit(`server:new-points/${route_id}:list`, {
-				route_id, 
-				lat: latStart, 
+				route_id,
+				lat: latStart,
 				lng: lngStart
 			})
 
+			client.broadcast.emit('server:new-points:list', {
+				route_id,
+				lat: latStart,
+				lng: lngStart
+			})
+
+			await sleep(2000)
+
 			client.emit(`server:new-points/${route_id}:list`, {
-				route_id, 
-				lat: latEnd, 
+				route_id,
+				lat: latEnd,
+				lng: lngEnd
+			})
+
+			client.broadcast.emit('server:new-points:list', {
+				route_id,
+				lat: latEnd,
 				lng: lngEnd
 			})
 

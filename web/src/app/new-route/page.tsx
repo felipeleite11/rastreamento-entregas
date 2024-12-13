@@ -52,7 +52,7 @@ export async function searchDirections(source: string, destination: string) {
 export async function NewRoutePage({ searchParams }: { searchParams: Promise<{ source: string, destination: string }> }) {
 	const { destination, source } = await searchParams
 
-	const result = destination && source ? await searchDirections(source, destination) : null
+	const result = source && destination ? await searchDirections(source, destination) : null
 
 	let directionsData = null
 	let placeSourceId = null

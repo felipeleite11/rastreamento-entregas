@@ -51,10 +51,13 @@ export default async function Driver({ searchParams }: DriverProps) {
 		}
 	}
 
+	console.log('page:', start_location, end_location)
+
 	return (
 		<div className="flex flex-1 w-full h-full">
 			<div className="w-1/3 p-2 h-full">
 				<h4 className="text-3xl text-contrast mb-2">Inicie uma rota</h4>
+				
 				<div className="flex flex-col">
 					<form className="flex flex-col space-y-4" method="get">
 						<select name="route_id" className="mb-2 p-2 border rounded bg-default text-contrast">

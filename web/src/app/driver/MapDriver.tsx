@@ -45,11 +45,11 @@ export function MapDriver({ route_id, start_location, end_location, ...props }: 
 		})
 
 		socket.on(`server:new-points/${route_id}:list`, (data: ServerNewPointsResponseProps) => {
-			console.log(`server:new-points/${route_id}:list`, data)
-
-			if(map.hasRoute(data.route_id)) {
+			const { route_id, lat, lng } = data
+		
+			if(!map.hasRoute(route_id)) {
 				map.addRouteWithIcons({
-					routeId: data.route_id,
+					routeId: route_id,
 					startMarkerOptions: {
 						position: start_location
 					},
@@ -60,10 +60,14 @@ export function MapDriver({ route_id, start_location, end_location, ...props }: 
 						position: start_location
 					}
 				})
-
-				map.moveCar(data.route_id, { lat: data.lat, lng: data.lng })
 			}
+
+			map.moveCar(route_id, { lat, lng })
 		})
+
+		return () => {
+			socket.disconnect()
+		}
 	}, [route_id, map, start_location, end_location])
 
 	return (
