@@ -16,7 +16,7 @@ export type MapDriverProps = ComponentProps<'div'> & {
 	} | null
 }
 
-type ServerNewPointsResponseProps = {
+export type ServerNewPointsResponseProps = {
 	route_id: string
 	lat: number
 	lng: number
