@@ -1,14 +1,70 @@
 'use client'
 
-import { ComponentProps, RefObject, useRef } from "react"
+import { ComponentProps, RefObject, useEffect, useRef } from "react"
 import { useMap } from "@/hooks/useMap"
+import { socket } from "@/utils/socket-io"
 
-export type MapDriverProps = ComponentProps<'div'>
+export type MapDriverProps = ComponentProps<'div'> & {
+	route_id: string | null
+	start_location: {
+		lat: number
+		lng: number
+	} | null
+	end_location: {
+		lat: number
+		lng: number
+	} | null
+}
 
-export function MapDriver(props: MapDriverProps) {
+type ServerNewPointsResponseProps = {
+	route_id: string
+	lat: number
+	lng: number
+}
+
+export function MapDriver({ route_id, start_location, end_location, ...props }: MapDriverProps) {
 	const mapContainerRef = useRef<HTMLDivElement>(null)
 
-	useMap(mapContainerRef as RefObject<HTMLDivElement>)
+	const map = useMap(mapContainerRef as RefObject<HTMLDivElement>)
+
+	useEffect(() => {
+		if(!map || !route_id || !start_location || !end_location) {
+			return
+		}
+
+		if(socket.disconnected) {
+			socket.connect()
+		} else {
+			socket.offAny()
+		}
+
+		socket.on('connect', () => {
+			console.log('Socket conectado!!!!')
+
+			socket.emit('client:new-points', { route_id })
+		})
+
+		socket.on(`server:new-points/${route_id}:list`, (data: ServerNewPointsResponseProps) => {
+			console.log(`server:new-points/${route_id}:list`, data)
+
+			if(map.hasRoute(data.route_id)) {
+				map.addRouteWithIcons({
+					routeId: data.route_id,
+					startMarkerOptions: {
+						position: start_location
+					},
+					endMarkerOptions: {
+						position: end_location
+					},
+					carMarkerOptions: {
+						position: start_location
+					}
+				})
+
+				map.moveCar(data.route_id, { lat: data.lat, lng: data.lng })
+			}
+		})
+	}, [route_id, map, start_location, end_location])
 
 	return (
 		<div {...props} ref={mapContainerRef}></div>
