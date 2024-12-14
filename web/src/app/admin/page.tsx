@@ -21,11 +21,11 @@ export default function Admin() {
 				socket.offAny()
 			}
 	
-			socket.on(`server:new-points:list`, async (data: ServerNewPointsResponseProps) => {
+			socket.on('server:new-points:list', async (data: ServerNewPointsResponseProps) => {
 				const { route_id, lat, lng } = data
-			
+
 				if(!map.hasRoute(route_id)) {
-					const response = await fetch(`http://localhost:3000/routes/${data.route_id}`)
+					const response = await fetch(`http://localhost:3001/api/routes/${data.route_id}`)
 
 					const route = await response.json()
 
