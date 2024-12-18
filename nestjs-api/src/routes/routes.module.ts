@@ -5,10 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { MapsModule } from 'src/maps/maps.module';
 import { RouteDriverService } from './route-driver/route-driver.service';
 import { RouteDriverGateway } from './route-driver/route-driver.gateway';
+import { KafkaModule } from 'src/kafka/kafka.module';
+import { RoutesConsumer } from './routes.consumer';
 
 @Module({
-  imports: [MapsModule],
-  controllers: [RoutesController],
+  imports: [MapsModule, KafkaModule],
+  controllers: [RoutesController, RoutesConsumer],
   providers: [RoutesService, PrismaService, RouteDriverService, RouteDriverGateway],
 })
 export class RoutesModule {}

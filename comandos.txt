@@ -1,0 +1,12 @@
+PARA EXECUTAR TODA A APLICAÇÃO NO DOCKER:
+
+executar na raiz do projeto:
+
+- docker compose up -d
+
+Em seguida, acessar o containers "nest" em 2 terminais diferentes: 
+- Executar "docker compose exec nest bash" em cada terminal.
+
+No primeiro terminal: executar: "npm run start:dev"
+
+No segundo terminal: executar: "npm run start:dev -- --entryFile=cmd/kafka.cmd"

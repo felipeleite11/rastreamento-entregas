@@ -1,6 +1,8 @@
+PARA EXECUTAR SOMENTE O PROJETO NEST:
+
 Terminal 1:
 docker compose up --build
 
 Terminal 2:
-docker compose exec app bash
+docker compose exec nest bash
 npm run start:dev

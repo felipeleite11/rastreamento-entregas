@@ -1,9 +1,35 @@
+include:
+  - ../mongodb/docker-compose.yaml
+  - ../kafka/docker-compose.yaml
+
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    ports:
-      - "27017:27017"
+  simulator_prod:
+    build:
+      context: .
+      target: final
+      dockerfile: Dockerfile.prod
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_URI=mongodb://root:root@mongo:27017/routes?authSource=admin&directConnection=true
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_ROUTE_TOPIC=route
+      - KAFKA_FREIGHT_TOPIC=freight
+      - KAFKA_SIMULATION_TOPIC=simulation
+      - KAFKA_GROUP_ID=route-group
+    container_name: simulator_prod
+
+  simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mongo
+      - kafka
+    volumes:
+      - ./:/app
+    environment:
+      - MONGO_URI=mongodb://root:root@mongo:27017/nest?authSource=admin
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_ROUTE_TOPIC=route
+      - KAFKA_FREIGHT_TOPIC=freight
+      - KAFKA_SIMULATION_TOPIC=simulation
+      - KAFKA_GROUP_ID=route-group
